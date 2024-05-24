@@ -128,3 +128,8 @@ Changelog for package fake_localization
 -------------------
 * Package URL Updates
 * amcl_pose and particle cloud are now published latched
+
+2.0.0 (2024-05-24)
+-------------------
+* Package has been migrated to ROS2 Humble
+
