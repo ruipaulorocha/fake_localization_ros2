@@ -67,4 +67,10 @@ install(
 #     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
+# install the launch directory
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
 ament_package()
