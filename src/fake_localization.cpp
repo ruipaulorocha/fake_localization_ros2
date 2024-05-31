@@ -194,64 +194,38 @@ FakeOdomNode::FakeOdomNode(void) : Node("fake_localization")
       this->declare_parameter<double>("delta_yaw", 0.0);
       this->declare_parameter<double>("transform_tolerance", 0.1);
 
+
       // load parameters
 
-      if (this->get_parameter("odom_topic", base_pose_ground_truth_topic_)) { // this is NEW as of v2.0.0
-         RCLCPP_INFO(this->get_logger(),"odom_topic parameter set succesfully to %s",
-          base_pose_ground_truth_topic_.c_str());
-      } else {
-          base_pose_ground_truth_topic_ = "odom";
-          RCLCPP_WARN(this->get_logger(),"Cannot read odom_topic parameter!");
-      }
+      this->get_parameter("odom_topic", base_pose_ground_truth_topic_); // this is NEW as of v2.0.0
+      RCLCPP_INFO(this->get_logger(),"odom_topic parameter set succesfully to %s",
+        base_pose_ground_truth_topic_.c_str());
 
-      if (this->get_parameter("odom_frame_id", odom_frame_id_)) {
-         RCLCPP_INFO(this->get_logger(),"odom_frame_id parameter set succesfully to %s", odom_frame_id_.c_str());
-      } else {
-          odom_frame_id_ = "odom";
-          RCLCPP_WARN(this->get_logger(),"Cannot read odom_frame_id parameter!");
-      }
+      this->get_parameter("odom_frame_id", odom_frame_id_);
+      RCLCPP_INFO(this->get_logger(),"odom_frame_id parameter set succesfully to %s",
+        odom_frame_id_.c_str());
+  
+      this->get_parameter("base_frame_id", base_frame_id_);
+      RCLCPP_INFO(this->get_logger(),"base_frame_id parameter set succesfully to %s",
+        base_frame_id_.c_str());
 
-      if (this->get_parameter("base_frame_id", base_frame_id_)) {
-         RCLCPP_INFO(this->get_logger(),"base_frame_id parameter set succesfully to %s", base_frame_id_.c_str());
-      } else {
-          base_frame_id_ = "base_link";
-          RCLCPP_WARN(this->get_logger(),"Cannot read base_frame_id parameter!");
-      }
+      this->get_parameter("global_frame_id", global_frame_id_);
+      RCLCPP_INFO(this->get_logger(),"global_frame_id parameter set succesfully to %s",
+        global_frame_id_.c_str());
+      
+      this->get_parameter("delta_x", delta_x_);
+      RCLCPP_INFO(this->get_logger(),"delta_x parameter set succesfully to %f", delta_x_);
 
-      if (this->get_parameter("global_frame_id", global_frame_id_)) {
-         RCLCPP_INFO(this->get_logger(),"global_frame_id parameter set succesfully to %s", global_frame_id_.c_str());
-      } else {
-          global_frame_id_ = "map";
-          RCLCPP_WARN(this->get_logger(),"Cannot read global_frame_id parameter!");
-      }
+      this->get_parameter("delta_y", delta_y_);
+      RCLCPP_INFO(this->get_logger(),"delta_y parameter set succesfully to %f", delta_y_);
+      
+      this->get_parameter("delta_yaw", delta_yaw_);
+      RCLCPP_INFO(this->get_logger(),"delta_yaw parameter set succesfully to %f", delta_yaw_);
 
-      if (this->get_parameter("delta_x", delta_x_)) {
-         RCLCPP_INFO(this->get_logger(),"delta_x parameter set succesfully to %f", delta_x_);
-      } else {
-          delta_x_ = 0.0;
-          RCLCPP_WARN(this->get_logger(),"Cannot read delta_x parameter!");
-      }
-
-      if (this->get_parameter("delta_y", delta_y_)) {
-         RCLCPP_INFO(this->get_logger(),"delta_y parameter set succesfully to %f", delta_y_);
-      } else {
-          delta_y_ = 0.0;
-          RCLCPP_WARN(this->get_logger(),"Cannot read delta_y parameter!");
-      }
-
-      if (this->get_parameter("delta_yaw", delta_yaw_)) {
-         RCLCPP_INFO(this->get_logger(),"delta_yaw parameter set succesfully to %f", delta_yaw_);
-      } else {
-          delta_yaw_ = 0.0;
-          RCLCPP_WARN(this->get_logger(),"Cannot read delta_yaw parameter!");
-      }
-
-      if (this->get_parameter("transform_tolerance", transform_tolerance_)) {
-         RCLCPP_INFO(this->get_logger(),"transform_tolerance parameter set succesfully to %f", transform_tolerance_);
-      } else {
-          transform_tolerance_ = 0.1;
-          RCLCPP_WARN(this->get_logger(),"Cannot read transform_tolerance parameter!");
-      }
+      this->get_parameter("transform_tolerance", transform_tolerance_);
+      RCLCPP_INFO(this->get_logger(),"transform_tolerance parameter set succesfully to %f",
+        transform_tolerance_);
+      
 
       // ros::NodeHandle private_nh("~");
       // private_nh.param("odom_frame_id", odom_frame_id_, std::string("odom"));
