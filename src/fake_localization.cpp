@@ -109,7 +109,7 @@
 class FakeOdomNode : public rclcpp::Node
 {
   private:
-    std::shared_ptr<rclcpp::Node> m_nh;
+    //std::shared_ptr<rclcpp::Node> m_nh;
     //ros::NodeHandle m_nh;
     rclcpp::Publisher<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr m_posePub;
     //ros::Publisher m_posePub;
