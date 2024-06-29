@@ -57,6 +57,10 @@ def generate_launch_description():
 		'base_frame_id',
 		default_value = 'base_link',
 		description = 'base frame id')
+	tf_tolerance_arg = DeclareLaunchArgument(
+		'transform_tolerance',
+		default_value = '0.1',
+		description = 'TF tolerance')	
 
 	# opaque functions
 	def get_prefix(context):
@@ -101,7 +105,8 @@ def generate_launch_description():
 				'global_frame_id':	[LaunchConfiguration('global_frame_id') ],
 				'delta_x':			delta['x'],
 				'delta_y':			delta['y'],
-				'delta_yaw':		delta['yaw']
+				'delta_yaw':		delta['yaw'],
+				'transform_tolerance': [LaunchConfiguration('transform_tolerance') ],
 				}
 			]#,
             #arguments=['--ros-args', '--log-level', 'DEBUG'] # to increase the logger level from INFO to DEBUG
@@ -121,6 +126,7 @@ def generate_launch_description():
 	ld.add_action(odom_frame_id_arg)
 	ld.add_action(global_frame_id_arg)
 	ld.add_action(base_frame_id_arg)
+	ld.add_action(tf_tolerance_arg)	
 
 	# opaque functions
 	ld.add_action(get_prefix_fn)
