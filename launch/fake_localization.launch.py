@@ -41,6 +41,22 @@ def generate_launch_description():
 		'delta_yaw',
 		default_value = '0.0',
 		description = 'delta_yaw offset between <namespace>/odom and /map')
+	odom_topic_arg = DeclareLaunchArgument(
+		'odom_topic',
+		default_value = 'odom',
+		description = 'odom topic')
+	odom_frame_id_arg = DeclareLaunchArgument(
+		'odom_frame_id',
+		default_value = 'odom',
+		description = 'odom frame id')
+	global_frame_id_arg = DeclareLaunchArgument(
+		'global_frame_id',
+		default_value = 'map',
+		description = 'global frame id')
+	base_frame_id_arg = DeclareLaunchArgument(
+		'base_frame_id',
+		default_value = 'base_link',
+		description = 'base frame id')
 
 	# opaque functions
 	def get_prefix(context):
@@ -51,12 +67,14 @@ def generate_launch_description():
 		return [SetLaunchConfiguration('frame_id_prefix', prefix)]
 
 	def get_odom_frame_id(context):
-		frame_id = os.path.join(context.launch_configurations['frame_id_prefix'], 'odom')
-		return [SetLaunchConfiguration('odom_frame_id', frame_id)]
+		frame_id = os.path.join(context.launch_configurations['frame_id_prefix'],
+			context.launch_configurations['odom_frame_id'])
+		return [SetLaunchConfiguration('odom_frame_id_with_prefix', frame_id)]
 
 	def get_base_frame_id(context):
-		frame_id = os.path.join(context.launch_configurations['frame_id_prefix'], 'base_link')
-		return [SetLaunchConfiguration('base_frame_id', frame_id)]
+		frame_id = os.path.join(context.launch_configurations['frame_id_prefix'],
+			context.launch_configurations['base_frame_id'])
+		return [SetLaunchConfiguration('base_frame_id_with_prefix', frame_id)]
 
 	get_prefix_fn = OpaqueFunction(function = get_prefix)
 	get_odom_frame_id_fn = OpaqueFunction(function = get_odom_frame_id)
@@ -77,12 +95,13 @@ def generate_launch_description():
 			name='fake_localization',
 			parameters=[
 				{
-				'odom_frame_id': [LaunchConfiguration('odom_frame_id') ],
-				'base_frame_id': [LaunchConfiguration('base_frame_id') ],
-				'global_frame_id': '/map',
-				'delta_x':   delta['x'],
-				'delta_y':   delta['y'],
-				'delta_yaw': delta['yaw']
+				'odom_topic':		[LaunchConfiguration('odom_topic') ],
+				'odom_frame_id':	[LaunchConfiguration('odom_frame_id_with_prefix') ],
+				'base_frame_id':	[LaunchConfiguration('base_frame_id_with_prefix') ],
+				'global_frame_id':	[LaunchConfiguration('global_frame_id') ],
+				'delta_x':			delta['x'],
+				'delta_y':			delta['y'],
+				'delta_yaw':		delta['yaw']
 				}
 			]#,
             #arguments=['--ros-args', '--log-level', 'DEBUG'] # to increase the logger level from INFO to DEBUG
@@ -98,6 +117,10 @@ def generate_launch_description():
 	ld.add_action(delta_x_arg)
 	ld.add_action(delta_y_arg)
 	ld.add_action(delta_yaw_arg)
+	ld.add_action(odom_topic_arg)
+	ld.add_action(odom_frame_id_arg)
+	ld.add_action(global_frame_id_arg)
+	ld.add_action(base_frame_id_arg)
 
 	# opaque functions
 	ld.add_action(get_prefix_fn)

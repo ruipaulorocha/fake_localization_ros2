@@ -144,7 +144,7 @@ class FakeOdomNode : public rclcpp::Node
     std::string odom_frame_id_;
     std::string base_frame_id_;
     std::string global_frame_id_;
-    std::string base_pose_ground_truth_topic_; // new parameter in v2.0.0
+    std::string odom_topic_; // new parameter in v2.0.0
 
   public:
     FakeOdomNode(void);
@@ -197,9 +197,9 @@ FakeOdomNode::FakeOdomNode(void) : Node("fake_localization")
 
       // load parameters
 
-      this->get_parameter("odom_topic", base_pose_ground_truth_topic_); // this is NEW as of v2.0.0
+      this->get_parameter("odom_topic", odom_topic_); // this is NEW as of v2.0.0
       RCLCPP_INFO(this->get_logger(),"odom_topic parameter set succesfully to %s",
-        base_pose_ground_truth_topic_.c_str());
+        odom_topic_.c_str());
 
       this->get_parameter("odom_frame_id", odom_frame_id_);
       RCLCPP_INFO(this->get_logger(),"odom_frame_id parameter set succesfully to %s",
@@ -249,7 +249,7 @@ FakeOdomNode::FakeOdomNode(void) : Node("fake_localization")
       m_offsetTf = tf2::Transform(q, tf2::Vector3(delta_x_, delta_y_, 0.0));
 
       stuff_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
-        base_pose_ground_truth_topic_, 100, std::bind(&FakeOdomNode::stuffFilter, this, std::placeholders::_1));
+        odom_topic_, 100, std::bind(&FakeOdomNode::stuffFilter, this, std::placeholders::_1));
       //stuff_sub_ = nh.subscribe("base_pose_ground_truth", 100, &FakeOdomNode::stuffFilter, this);
 
       filter_sub_.subscribe(this, "");
@@ -322,11 +322,16 @@ void FakeOdomNode::update(const nav_msgs::msg::Odometry::SharedPtr message){
       }
 
       geometry_msgs::msg::TransformStamped trans;
-      //geometry_msgs::TransformStamped trans;
+      //geometry_msgs::TransformStamped trans;trans.header.stamp.sec
       int32_t toler_secs = (int32_t) transform_tolerance_;
       uint32_t toler_nanosecs = (uint32_t) ( (transform_tolerance_ - (double) toler_secs) * 1e9);
       trans.header.stamp.sec = message->header.stamp.sec + toler_secs;
       trans.header.stamp.nanosec = message->header.stamp.nanosec + toler_nanosecs;
+      unsigned long int nanosec_overflow = trans.header.stamp.nanosec / 1000000000;
+      if (nanosec_overflow > 0){
+        trans.header.stamp.sec += (unsigned long int) nanosec_overflow;
+        trans.header.stamp.nanosec -= nanosec_overflow * 1000000000;
+      }
       //trans.header.stamp = message->header.stamp + ros::Duration(transform_tolerance_);
       trans.header.frame_id = global_frame_id_;
       trans.child_frame_id = message->header.frame_id;
