@@ -249,13 +249,13 @@ FakeOdomNode::FakeOdomNode(void) : Node("fake_localization")
       m_offsetTf = tf2::Transform(q, tf2::Vector3(delta_x_, delta_y_, 0.0));
 
       stuff_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
-        odom_topic_, 100, std::bind(&FakeOdomNode::stuffFilter, this, std::placeholders::_1));
+        odom_topic_, 1000, std::bind(&FakeOdomNode::stuffFilter, this, std::placeholders::_1));
       //stuff_sub_ = nh.subscribe("base_pose_ground_truth", 100, &FakeOdomNode::stuffFilter, this);
 
       filter_sub_.subscribe(this, "");
       //filter_sub_ = new message_filters::Subscriber<nav_msgs::Odometry>(nh, "", 100);
       filter_ = std::make_shared<tf2_ros::MessageFilter<nav_msgs::msg::Odometry>>(
-        filter_sub_, *m_tfBuffer, base_frame_id_, 100, this->get_node_logging_interface(),
+        filter_sub_, *m_tfBuffer, base_frame_id_, 1000, this->get_node_logging_interface(),
         this->get_node_clock_interface(), buffer_timeout);
       //filter_ = new tf2_ros::MessageFilter<nav_msgs::Odometry>(*filter_sub_,
       //  *m_tfBuffer, base_frame_id_, 100, nh);      
