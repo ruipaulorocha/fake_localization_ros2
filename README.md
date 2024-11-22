@@ -9,6 +9,8 @@ The `fake_localization_ros2` package provides a single node, `fake_localization`
 This node is most frequently used during simulation as a method to provide localization based on perfect odometry in a computationally inexpensive manner.
 Specifically, `fake_localization` converts odometry data into pose, particle cloud, and transform data of the form published by `amcl`.
 
+The node `fake_localization` is also available as a composable node, `fake_localization_ros2::FakeOdomNode`, which can be launched dynamically inside a ROS container and use intra-process communication.
+
 
 #### Nodes
 
