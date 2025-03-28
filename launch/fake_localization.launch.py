@@ -29,6 +29,10 @@ def generate_launch_description():
 		'namespace',
 		default_value = '',
 		description = 'Top-level namespace')
+	use_sim_time_arg = DeclareLaunchArgument(
+		'use_sim_time',
+		default_value = 'true',
+		description = 'Whether to use simulated time')
 	delta_x_arg = DeclareLaunchArgument(
 		'delta_x',
 		default_value = '0.0',
@@ -107,6 +111,7 @@ def generate_launch_description():
 				'delta_y':			delta['y'],
 				'delta_yaw':		delta['yaw'],
 				'transform_tolerance': [LaunchConfiguration('transform_tolerance') ],
+				'use_sim_time':		[LaunchConfiguration('use_sim_time') ]
 				}
 			]#,
             #arguments=['--ros-args', '--log-level', 'DEBUG'] # to increase the logger level from INFO to DEBUG
@@ -119,6 +124,7 @@ def generate_launch_description():
 	# arguments
 	ld.add_action(use_namespace_arg)
 	ld.add_action(namespace_arg)
+	ld.add_action(use_sim_time_arg)
 	ld.add_action(delta_x_arg)
 	ld.add_action(delta_y_arg)
 	ld.add_action(delta_yaw_arg)
