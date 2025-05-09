@@ -92,8 +92,8 @@
 #include <tf2/LinearMath/Transform.h>
 //#include <tf2/LinearMath/Transform.h>
 //#include <tf2/convert.h>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
-//#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+//#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/create_timer_ros.h>
 //#include <tf2_ros/buffer.h>
@@ -184,7 +184,10 @@ FakeOdomNode::FakeOdomNode(void) : Node("fake_localization")
       //  without creating an additional "hidden" node named 'transform_listener_implem...'
       //  In this case, the TF2 listener will be a thread inside the fake_localization node,
       //  not a separate node
-      m_tfListener = std::make_shared<tf2_ros::TransformListener>(*m_tfBuffer, this, true);
+      //m_tfListener = std::make_shared<tf2_ros::TransformListener>(*m_tfBuffer, this, true);
+
+
+      m_tfListener = std::make_shared<tf2_ros::TransformListener>(*m_tfBuffer);      
       //m_tfListener = new tf2_ros::TransformListener(*m_tfBuffer);
       RCLCPP_INFO(this->get_logger(), "Waiting for TF2 listener to be ready...");
       while (!m_tfBuffer->canTransform(odom_frame_id_.c_str(), base_frame_id_.c_str(),
@@ -416,7 +419,7 @@ int main(int argc, char** argv)
   std::shared_ptr<rclcpp::Node> node = std::make_shared<FakeOdomNode>();
   //FakeOdomNode odom;
 
-  rclcpp::spin(node->get_node_base_interface());
+  rclcpp::spin(node);
   //ros::spin();
 
   // Shutdown the ROS2 communication

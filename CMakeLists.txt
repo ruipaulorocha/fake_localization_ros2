@@ -57,27 +57,27 @@ install(
 )
 
 
-# Install and declare ROS component
+# # Install and declare ROS component
 
-add_library(fake_localization_component SHARED src/FakeOdomNode.cpp)
-ament_target_dependencies(fake_localization_component
-  rclcpp rclcpp_components
-  nav_msgs geometry_msgs tf2_ros nav_msgs tf2_geometry_msgs tf2 angles
-)
-rclcpp_components_register_node(
-    fake_localization_component
-    PLUGIN "fake_localization_ros2::FakeOdomNode"
-    EXECUTABLE exec_fake_localization_component
-)
-ament_export_targets(export_fake_localization_component)
-install(
-    TARGETS  fake_localization_component
-    EXPORT   export_fake_localization_component
-    ARCHIVE  DESTINATION lib    
-    LIBRARY  DESTINATION lib
-    RUNTIME  DESTINATION bin
-    INCLUDES DESTINATION include
-)
+# add_library(fake_localization_component SHARED src/FakeOdomNode.cpp)
+# ament_target_dependencies(fake_localization_component
+#   rclcpp rclcpp_components
+#   nav_msgs geometry_msgs tf2_ros nav_msgs tf2_geometry_msgs tf2 angles
+# )
+# rclcpp_components_register_node(
+#     fake_localization_component
+#     PLUGIN "fake_localization_ros2::FakeOdomNode"
+#     EXECUTABLE exec_fake_localization_component
+# )
+# ament_export_targets(export_fake_localization_component)
+# install(
+#     TARGETS  fake_localization_component
+#     EXPORT   export_fake_localization_component
+#     ARCHIVE  DESTINATION lib    
+#     LIBRARY  DESTINATION lib
+#     RUNTIME  DESTINATION bin
+#     INCLUDES DESTINATION include
+# )
 
 
 # Declare and install Cpp node
